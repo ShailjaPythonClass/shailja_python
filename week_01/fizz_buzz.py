@@ -9,3 +9,7 @@ def fizz_buzz(x, fizz=3, buzz=5):
     elif x % buzz == 0:
         return "buzz"
     return str(x)
+    
+if __name__ =="__main__":
+    for i in range(1,21):
+        print fizz_buzz(i)

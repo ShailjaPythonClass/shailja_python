@@ -17,7 +17,7 @@ def sample_function():
 
 if __name__ == "__main__":
     print "hello world"
-    filename = "./sample_data/test_data.csv"    
+    filename = "../sample_data/test_data.csv"    
     
     # How to open a file for raw text reading
     with open(filename, 'r') as infile:
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     df = pd.read_csv(filename)
     
     # Groupby operations on dataframes
-    averages = df.groupby(['category', 'feature_one']).mean()
+    averages = df.groupby('category').mean()
         
     # Plotting some bars
     x_axis = range(5)
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     for i, row in averages.iterrows():        
         heights = row.tolist()
         f = plt.bar(x_axis, heights, width = 0.1, color=colors.next())
-        x_axis = [x+0.1 for x in x_axis]
+        x_axis = [x + 0.1 for x in x_axis]
         categories_used.append((i, f))
     plt.title("Volume for All Categories".format(i))
         

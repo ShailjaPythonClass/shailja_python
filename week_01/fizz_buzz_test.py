@@ -31,3 +31,5 @@ if __name__ == "__main__":
     assert fizz_buzz(24, 4, 6) == "fizzbuzz"
     assert fizz_buzz(144, 4, 6) == "fizzbuzz"
     
+    print "\n\n\t=== All tests passed ===\n\n\t\t  yay"
+    
