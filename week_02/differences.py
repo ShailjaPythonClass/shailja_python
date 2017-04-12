@@ -33,5 +33,7 @@ if __name__ == "__main__":
     tech_rets = [get_px(n, start_date, end_date) for n in stocks['tech']]    
     df = pd.DataFrame(dict(zip(stocks['tech'], tech_rets)))
     
-    print np.roll([1,2,4,8], -1)
+    diffs = df - df.shift(-1)
+    
+    print diffs['AMZN'] > diffs['GOOGL']
     
