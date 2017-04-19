@@ -26,12 +26,14 @@ if __name__ == '__main__':
         last = row
     print sum(flags), (time.clock() - start)
 
-    start = time.clock()    
-    failures = (df.shift(1).dest != df.source) & \
-                 (df.shift(1).group_id == df.group_id) & \
-                 (df.shift(1).category != df.category)
+    start = time.clock()
+    prev_row = df.shift(1)
+    failures = (prev_row.dest != df.source) & \
+                 (prev_row.group_id == df.group_id) & \
+                 (prev_row.category != df.category)
     print sum(failures), (time.clock() - start)
     
+    sum([a != b for a,b in zip(flags, failures)])
     df['failures'] = flags
     
     
