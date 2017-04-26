@@ -7,19 +7,19 @@ Created on Wed Apr 12 17:41:59 2017
 import pandas as pd
 
 
-def cube(x):
-    return x**3    
+def cube(x):    
+    return x**3
     
 if __name__ == "__main__":
     # A few things I didn't go over.
     # An easy way to make a list, called list comprehension    
     squares = [x*x for x in range(10)]
-    print squares
-               
+    print squares    
     # The map function applies the first argument(a function) 
     # to every element in the second argument (an iterable item)
-    map_cubes = map(cube, range(10))
+    map_cubes = map(cube, range(10))    
     print map_cubes
+    print [cube(x) for x in range(10)]
     
     # See how simple the function cube() was?  
     # This is frequently when people write what are called
@@ -53,6 +53,6 @@ if __name__ == "__main__":
     print one_line_dict
     
     # dataframes can be made from dictionaries
-    df = pd.DataFrame({'a': range(10), 'b':2})
+    df = pd.DataFrame({'a': range(10), 'b': 'DATA'})
     print df.head()
     
