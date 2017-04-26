@@ -1,0 +1,11 @@
+name: python-class
+dependencies:
+- python=2.7
+- numpy=1.9.0
+- pandas=0.16.2
+- matplotlib=1.4.3
+- nltk=3.2.2
+- requests=2.13.0
+- scikit-learn=0.16.1
+- statsmodels=0.6.1
+
