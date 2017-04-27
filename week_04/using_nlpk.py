@@ -47,6 +47,45 @@ def pull_names():
 
     return boys_names, girls_names
 
+def new_site():
+    """
+    Reads 1000 most common American baby names from the internet, 
+    
+    Returns names in two lists: boys_names, girls_names
+    """
+    base = 'http://www.babynamewizard.com/'
+    site = base + 'the-top-1000-baby-names-of-2015-united-states-of-america'
+    
+    page = requests.get(site)
+    
+    def get_name(x):
+        if x.attrs.get('class', None) == [u'p1'] \
+            and x.getText() \
+            and x.getText().isalpha():
+            return x.getText()
+        return None
+
+    soup = BeautifulSoup(page.text, "html.parser")
+    tables = soup.find_all('table')
+    # girls are tables[1], boys tables[2]
+    girls = []
+    for row in tables[1].find_all('tr'):
+        try:
+            name = row.find_all('td')[1].text
+            girls.append(name)
+        except IndexError:
+            pass
+
+    boys = []
+    for row in tables[2].find_all('tr'):
+        try:
+            name = row.find_all('td')[1].text
+            boys.append(name)
+        except IndexError:
+            pass    
+
+    return boys, girls
+    
 def first_letter(name):
     """ 
     A simple nltk feature calculator
@@ -102,10 +141,12 @@ def test_classifier(classifier_type, func):
     accuracy = nltk.classify.accuracy(classifier, test_set)
     test_our_class(classifier, func)
     return accuracy
+
             
 if __name__ == "__main__":
     func = first_letter
-    boys, girls = pull_names()  
+    boys, girls = pull_names()
+    
     seed(2)    
     test_set, train_set = label_names(boys, girls, func)
        
