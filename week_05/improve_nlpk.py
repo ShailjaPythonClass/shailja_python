@@ -44,11 +44,11 @@ def test_our_class(classifier, func):
              if real != guess]
     return fails
     
-def test_classifier(classifier_type, boys, girls, func):        
-    test_set, train_set = label_names(boys, girls, func)
+def test_classifier(classifier_type, boys, girls, feature_func):        
+    test_set, train_set = label_names(boys, girls, feature_func)
     classifier = classifier_type.train(train_set)
     accuracy = nltk.classify.accuracy(classifier, test_set)
-    test_our_class(classifier, func)
+    fails = test_our_class(classifier, feature_func)
     return accuracy, fails
 
             
