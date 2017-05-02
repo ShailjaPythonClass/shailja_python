@@ -80,8 +80,4 @@ if __name__ == "__main__":
     test_df, test_labels = features_to_df(test_set)
 
     print classifier.score(test_df, test_labels)
-    
-    
-    
-    
-    
+
