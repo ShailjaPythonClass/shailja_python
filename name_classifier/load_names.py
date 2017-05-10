@@ -38,6 +38,8 @@ def add_ambiguous(function, *args, **kwargs):
 def load_born_names(year, *args, **kwargs):
     """
     Load names from census data for all people born in given year.
+    
+    returns boys_names, girls_names, ambiguous_names
     """
     filename = "us_census/yob{}.txt".format(year)
     df = pd.read_csv(_datapath(filename),
@@ -50,16 +52,30 @@ def load_born_names(year, *args, **kwargs):
 def load_census_names():
     """
     Load all names from the census-dist files (names with frequency)
+    
+    returns boys_names, girls_names, ambiguous_names
     """
-    def name_only(x):
-        return x.split(' ')[0].title()
+    def name_rate(x):
+        row = x.split(' ')
+        name = row[0].title()
+        freq = 0.0
+        for col in row[1:]:
+            if len(col) > 0:
+                freq = float(col)
+                break
+        return name, freq
+    def tuples_to_df(name_list):        
+        tuples  = map(name_rate, name_list)
+        df = pd.DataFrame({'name':[g[0] for g in tuples],
+                           'count':[g[1] for g in tuples]})
+        return df
     with open(_datapath('census-dist-female-first.txt'), 'r') as inf:
         girls = inf.read().split('\n')
-    girls = map(name_only, girls)
+    girls_df = tuples_to_df(girls)
     with open(_datapath('census-dist-male-first.txt'), 'r') as inf:
         boys = inf.read().split('\n')
-    boys = map(name_only, boys)
-    return boys, girls
+    boys_df = tuples_to_df(boys)
+    return _find_ambiguous_from_df(boys_df, girls_df)
 
 def load_us_names():
     """
