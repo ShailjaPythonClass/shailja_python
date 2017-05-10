@@ -76,8 +76,9 @@ if __name__ == "__main__":
     
     classifier = RandomForestClassifier(n_estimators=100)
     train_df, train_labels = features_to_df(train_set)
+    
     classifier.fit(train_df.as_matrix(), train_labels)
     test_df, test_labels = features_to_df(test_set)
-
-    print classifier.score(test_df, test_labels)
+    accuracy = classifier.score(test_df, test_labels)
+    print accuracy
 
