@@ -5,18 +5,14 @@ Created on Tue May 02 13:41:47 2017
 @author: apsingh
 """
 
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Apr 19 14:38:37 2017
-
-@author: jzuber
-"""
 import nltk
 from numpy.random import shuffle, seed
 
-from features import ends_and_vowels
-from international_names import load_international_names, load_us_names
-   
+from features import ends_and_vowels , ngrams_ends_and_vowels
+from load_names import load_international_names, load_us_names, load_born_names
+from classifiers import ConditionalExponential, DecisionTree,  Maxent, \
+                        NaiveBayes
+
 def label_names(boys_names, girls_names, func):
     """
     Apply feature function, func to each name, 
@@ -57,27 +53,31 @@ def test_classifier(classifier_type, boys, girls, func):
                        'Maxent':Maxent,
                        'NaiveBayes':NaiveBayes}
     
-    classifier, accuracy = classifier_dict['NaiveBayes'](boys, girls, func) 
-    test_our_class(classifier, func)
+    classifier, accuracy = classifier_dict[classifier_type](boys, girls, func) 
+    fails = test_our_class(classifier, func)
     return accuracy, fails
 
 
 if __name__ == "__main__":    
     boys, girls = load_us_names()
-    accuracy, fails = test_classifier('NaiveBayes', 
-                                      boys, 
+    classifiers = ['DecisionTree', 'Maxent', 'NaiveBayes', 
+                   'ConditionalExponential']
+    classifier_type = 'DecisionTree'
+    feature = ngrams_ends_and_vowels
+    accuracy, fails = test_classifier(classifier_type, 
+                                      boys,
                                       girls, 
-                                      ends_and_vowels)
+                                      feature)
     print "US accuracy: {}\n".format(accuracy)
     for name in fails:
         print "{} was misclassified.".format(name)
     print ""
     
     boys, girls = load_international_names()
-    accuracy, fails = test_classifier(nltk.NaiveBayesClassifier, 
+    accuracy, fails = test_classifier(classifier_type, 
                                       boys, 
                                       girls, 
-                                      ends_and_vowels)
+                                      feature)
     print "International accuracy: {}\n".format(accuracy)
     for name in fails:
         print "{} was misclassified.".format(name)
