@@ -3,106 +3,153 @@
 Created on Tue May 30 15:41:22 2017
 
 @author: jzuber
-"""
+"""   
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 
-def clean_data(traits_df):
+from clean_data import fix_all_nan
     
-    for col, typ in traits_df.dtypes.iteritems():
-        if typ is np.dtype('float64') \
-            or typ is np.dtype('int64'):
-            pass #traits_df[col].fillna(-1, inplace=True)
-        elif typ is np.dtype('object'):
-            if True in traits_df[col].unique():
-                traits_df[col].fillna(False, inplace=True)
-            elif 'Y' in traits_df[col].unique():
-                traits_df[col].fillna('N', inplace=True)
-                traits_df[col] = traits_df[col].apply(lambda x: x == 'Y')                
-            else:
-                traits_df[col].fillna('', inplace=True)
-    
-    traits_df['airconditioningtypeid'].fillna(5, inplace=True)
-    
-    zero_fills = ['architecturalstyletypeid',
-                  'basementsqft', 
-                  'bathroomcnt', 
-                  'bedroomcnt',
-                  'decktypeid',
-                  'threequarterbathnbr',
-                  ]
-    for col in zero_fills:
-        traits_df[col].fillna(0, inplace=True)
-        
-    false_fills = ['fireplaceflag']
-    for col in false_fills:
-        traits_df[col].fillna(False, inplace=True)
-    
-    median_fills = ['buildingclasstypeid', 
-                    'buildingqualitytypeid',
-                    'calculatedbathnbr',
-                    'numberofstories',
-                    'propertycountylandusecode',
-                    'propertylandusetypeid',
-                    'propertyzoningdesc',
-                    ]
-    for col in median_fills:
-        traits_df[col].fillna(traits_df[col].median(), inplace=True)            
-        
-    col = 'calculatedfinishedsquarefeet'
-    for alt_col in ['finishedsquarefeet%d' % i for i in [6, 12, 15]]:
-        traits_df[col].fillna(traits_df[alt_col], inplace=True)
-    
-    col = ['finishedfloor1squarefeet']
-    for alt_col in ['finishedsquarefeet50']:
-        traits_df[col].fillna(traits_df[alt_col], inplace=True)
-    guess = traits_df['calculatedfinishedsquarefeet'] \
-            / traits_df['numberofstories']
-    traits_df[col].fillna(guess, inplace=True)
-          
-    traits_df['fireplacecnt'].fillna(1*traits_df['fireplaceflag'])
-    traits_df['fireplaceflag'] = traits_df['fireplacecnt'] > 0
-            
-    return traits_df
+from sklearn.tree import DecisionTreeRegressor
 
-def balanced_sample(traits_df, typecol='propertylandusetypeid'):
-    def balanced_class(num_per_class, len_df):        
-        def balance(group):
-            n = min(group.propertylandusetypeid.count(), int(num_per_class))
-            return group.sample(n=n, replace=False)
-        return balance
-        
-    
-    func = balanced_class(1e4, len(traits_df))
-    return traits_df.groupby(typecol, group_keys=False).apply(func)
-    
-    
-if __name__ == "__main__":
-    try:
-        traits_df = traits_backup.copy()        
-    except (NameError, AttributeError):
-        traits_df = pd.read_csv('data/properties_2016.csv')
-        traits_backup = traits_df.copy()        
-        
-    
-    try:
-        score_df = score_backup.copy()
-    except (NameError, AttributeError):
-        score_df = pd.read_csv('data/train_2016.csv')
-        score_backup = score_df.copy()
-                        
-    house_df = traits_df[traits_df.propertylandusetypeid == 261]
-    
-    merged = pd.merge(house_df, score_df, on='parcelid')
-    del traits_df
-    del house_df
-    
-    for col in merged.columns:
+def scatter_all(df, interesting):
+    ycol = 'logerror'
+    for col in interesting:
         plt.figure()
-        try:
-            plt.scatter(merged[col], merged.logerror)            
+        try:            
+            plt.scatter(df[col], df[ycol])            
         except:
             pass
         finally:
             plt.title(col)
+            plt.xlabel(col)
+            plt.ylabel(ycol)
+
+
+def three_d_scatter_plots(df, interesting):
+    zcol = 'logerror'
+    ignores = ['cnt', 'id', 'number', 'date', 'fips', 'flag']
+    sub = df.sample(1000)
+    for col1 in interesting:        
+        for col2 in interesting:            
+            if any([x.count(y) for x in [col1, col2] for y in ignores]):
+                continue            
+            if col1 >= col2:
+                continue
+            print col1, col2
+            try:
+                fig = plt.figure()
+                ax = fig.add_subplot(111, projection='3d')
+                ax.scatter3D(sub[col1], sub[col2], sub[zcol])
+            except:
+                pass
+            finally:
+                plt.title("{}, {} vs {}".format(col1, col2, zcol))
+                plt.xlabel(col1)
+                plt.ylabel(col2)            
+
+
+def plot_raw_error(df):    
+    ycol = 'logerror'
+    categorical = get_categorical(df)
+    abscol = df[ycol].abs()
+    bad = df[(abscol > abscol.median()) & (abscol < 1.0)]
+    for col in categorical:
+        plt.figure()
+        sns.violinplot(col, ycol, data=bad)
+        plt.title("Raw error vs " + col)
+
+        
+def get_categorical(df):
+    categorical = [c for c in df.columns 
+                   if len(df[c].unique()) < 10 
+                   and len(df[c].unique()) > 1]        
+    return categorical
+                
+if __name__ == "__main__":
+    
+    try:
+        merged = pd.read_hdf('data/merged.hdf5')
+    except IOError:
+        try:
+            traits_df = pd.read_hdf('data/properties_2016.hdf5')
+            score_df = pd.read_hdf('data/train_2016.hdf5')
+        except IOError:
+            traits_df = pd.read_csv('data/properties_2016.csv')
+            score_df = pd.read_csv('data/train_2016.csv')
+            traits_df.to_hdf('data/properties_2016.hdf5', 'traits_df', mode='w')
+            score_df.to_hdf('data/train_2016.hdf5', 'score_df', mode='w')                    
+        house_df = traits_df[traits_df.propertylandusetypeid == 261]
+        merged = pd.merge(house_df, score_df, on='parcelid')
+        del traits_df
+        del house_df    
+        merged = fix_all_nan(merged)
+        merged.to_hdf('data/merged.hdf5', 'merged', mode='w')
+    
+    interesting = ['airconditioningtypeid',
+                 'basementsqft',
+                 'bathroomcnt',
+                 'bedroomcnt',
+                 'calculatedbathnbr',
+                 'decktypeid',
+                 'finishedfloor1squarefeet',
+                 'calculatedfinishedsquarefeet',
+                 'finished_living_area',
+                 'fips',
+                 'fireplacecnt',
+                 'fullbathcnt',
+                 'garagecarcnt',
+                 'garagetotalsqft', 
+                 'lotsizesquarefeet',  
+                 'regionidzip',
+                 'roomcnt',
+                 'yearbuilt',
+                 'numberofstories',
+                 'fireplaceflag', 
+                 'transaction_month',]    
+
+    ycol = 'logerror'    
+    categorical = get_categorical(merged)
+    cat_df = merged[[ycol] + categorical].copy()
+    cat_df.replace([-np.inf, np.inf], np.nan, inplace=True)
+    cat_df.dropna(inplace=True)
+
+    for col in categorical:
+        cat_df[col] = cat_df[col].apply(int)    
+    cat_df.describe()
+        
+    dtree = DecisionTreeRegressor(max_depth=5)
+    fit = dtree.fit(cat_df, cat_df[ycol])
+        
+    cat_df['fit'] = dtree.predict(cat_df)
+    cat_df['diff'] = cat_df['fit'] - cat_df[ycol]    
+    for col in categorical:
+        plt.figure()
+        sns.violinplot(col, 'diff', data=cat_df)
+        plt.title(col)                
+    
+    plt.figure()
+    plt.scatter(cat_df[ycol], cat_df['fit'])
+    plt.title('Actual vs Decision Tree Fit')
+    plt.xlabel('Actual')
+    plt.ylabel('Decision Tree Fit')
+    plt.show()
+    
+    denom = cat_df[ycol].apply(lambda x: max(np.abs(x), 1e-3))
+    inds = denom > 0.25
+    plt.figure()
+    plt.scatter(cat_df.loc[inds, ycol], cat_df.loc[inds, 'diff'] / denom[inds])
+    plt.title('Actual vs Decision Tree Error')
+    plt.xlabel('Actual')
+    plt.ylabel('Decision Tree Error')
+    plt.show()
+    
+    old_mean = np.abs(cat_df[ycol]).mean()
+    old_std = cat_df[ycol].std()
+    new_mean = np.abs(cat_df[ycol] - cat_df['fit']).mean()
+    new_std = np.abs(cat_df[ycol] - cat_df['fit']).std()
+    print (old_mean, old_std), (new_mean, new_std)
+
+    
+    
