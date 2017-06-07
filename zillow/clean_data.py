@@ -7,9 +7,7 @@ Created on Wed Jun 07 09:21:29 2017
 
 import numpy as np
 import pandas as pd
-import seaborn as sns
 import datetime as dt
-import matplotlib.pyplot as plt
 
 from functools import partial
 
@@ -168,7 +166,9 @@ if __name__ == "__main__":
         except IOError:
             traits_df = pd.read_csv('data/properties_2016.csv')
             score_df = pd.read_csv('data/train_2016.csv')
-            traits_df.to_hdf('data/properties_2016.hdf5', 'traits_df', mode='w')
+            traits_df.to_hdf('data/properties_2016.hdf5', 
+                             'traits_df', 
+                             mode='w')
             score_df.to_hdf('data/train_2016.hdf5', 'score_df', mode='w')                    
         house_df = traits_df[traits_df.propertylandusetypeid == 261]
         merged = pd.merge(house_df, score_df, on='parcelid')
