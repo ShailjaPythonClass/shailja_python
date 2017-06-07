@@ -156,13 +156,15 @@ def balanced_sample(traits_df, typecol='propertylandusetypeid'):
     func = balanced_class(1e4, len(traits_df))
     return traits_df.groupby(typecol, group_keys=False).apply(func)
 
-if __name__ == "__main__":
+def get_clean_merged_df():
     try:
-        merged = pd.read_hdf('data/merged.hdf5')
+        merged = pd.read_hdf('data/merged.hdf5', 'merged')
     except IOError:
         try:
-            traits_df = pd.read_hdf('data/properties_2016.hdf5')
-            score_df = pd.read_hdf('data/train_2016.hdf5')
+            traits_df = pd.read_hdf('data/properties_2016.hdf5',
+                                    'traits_df')
+            score_df = pd.read_hdf('data/train_2016.hdf5',
+                                   'score_df')
         except IOError:
             traits_df = pd.read_csv('data/properties_2016.csv')
             score_df = pd.read_csv('data/train_2016.csv')
@@ -176,3 +178,8 @@ if __name__ == "__main__":
         del house_df    
         merged = fix_all_nan(merged)
         merged.to_hdf('data/merged.hdf5', 'merged', mode='w')
+    return merged
+    
+if __name__ == "__main__":
+    merged = get_clean_merged_df()
+    
