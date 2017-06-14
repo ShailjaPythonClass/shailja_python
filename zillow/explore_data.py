@@ -9,7 +9,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from clean_data import fix_all_nan, get_clean_merged_df
+from clean_data import get_clean_merged_df
 
 from sklearn.tree import DecisionTreeRegressor
 
@@ -61,13 +61,6 @@ def plot_raw_error(df):
         plt.title("Raw error vs " + col)
 
 
-def get_categorical(df):
-    categorical = [c for c in df.columns
-                   if len(df[c].unique()) < 10
-                   and len(df[c].unique()) > 1]
-    return categorical
-
-
 def decision_tree_fit(df, interesting, ycol='logerror', plot_diffs=False):
     categorical = get_categorical(df)
     cat_df = df[[ycol] + categorical].copy()
@@ -111,7 +104,13 @@ def decision_tree_fit(df, interesting, ycol='logerror', plot_diffs=False):
     new_std = np.abs(cat_df[ycol] - cat_df['fit']).std()
     return cat_df, [(old_mean, old_std), (new_mean, new_std)]
 
+def get_categorical(df):
+    categorical = [c for c in df.columns
+                   if len(df[c].unique()) < 10
+                   and len(df[c].unique()) > 1]
+    return categorical
 
+    
 if __name__ == "__main__":
     merged = get_clean_merged_df()
 
@@ -140,4 +139,14 @@ if __name__ == "__main__":
     cat_df, stats = decision_tree_fit(merged, interesting, ycol='logerror')
     print "Mean \tStd\n",
     print "\n".join(["{0:2.4f}, {1:2.4f}".format(s[0], s[1]) for s in stats])
+        
+    from statsmodels.formula.api import ols
+    categorical_cols =  get_categorical(merged)
+    formula = 'logerror ~ fireplacecnt + garagecarcnt + hashottuborspa'
+    linear_fitter = ols(formula, merged)
+    model = linear_fitter.fit()
+    model.summary()
     
+    # Now talk about 
+    reg_model = linear_fitter.fit_regularized(alpha=1e-4, l1_wt=0.15)
+    reg_model.summary()
