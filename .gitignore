@@ -4,5 +4,6 @@ name_classifier/data_sets/us_census/*
 sample_data/opldata.csv
 *.zip
 *.pyc
+*.pkl
 
 
