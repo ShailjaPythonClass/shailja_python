@@ -33,13 +33,18 @@ if __name__ == "__main__":
     colnames.update(names)
     df.rename(columns=colnames, inplace=True)
     df.date = pd.to_datetime(df.date)
+    for col in df.columns:
+        if col == 'date':
+            continue
+        df[col] = np.random.randint(df[col].max()/3, df[col].max()/2, len(df))
     
-#    wh_cols = [col for col in df.columns if 'wh_' in col and col[-1].isdigit()]
-#    plt.figure()    
-#    for col in wh_cols:
-#        plt.plot(df.date, df[col], label=col)
-#    plt.legend(bbox_to_anchor=(1.3, 1.0))
-#    plt.show()
+    wh_cols = [col for col in df.columns if 'wh_' in col and col[-1].isdigit()]
+    plt.figure()    
+    for col in wh_cols:
+        plt.plot(df.date, df[col], label=col)
+    plt.legend(bbox_to_anchor=(1.3, 1.0))
+    plt.show()
     df.to_csv('output/daily.csv')
+    
     
     
