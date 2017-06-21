@@ -1,0 +1,11 @@
+name_classifier/data_sets/*.txt
+name_classifier/data_sets/*.csv
+name_classifier/data_sets/us_census/*
+sample_data/opldata.csv
+*/data/*
+*/output/*
+*.zip
+*.pyc
+*.pkl
+
+

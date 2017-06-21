@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Apr 19 14:38:37 2017
+Created on Tue May 02 13:41:47 2017
 
-@author: jzuber
+@author: apsingh
 """
+
 import nltk
 from numpy.random import shuffle, seed
 
-from features import ends_and_vowels
-from international_names import load_international_names, load_us_names
-   
+from features import ends_and_vowels , ngrams_ends_and_vowels
+from load_names import load_international_names, load_us_names, load_born_names
+from classifiers import ConditionalExponential, DecisionTree,  Maxent, \
+                        NaiveBayes
+
 def label_names(boys_names, girls_names, func):
     """
     Apply feature function, func to each name, 
@@ -44,30 +47,37 @@ def test_our_class(classifier, func):
              if real != guess]
     return fails
     
-def test_classifier(classifier_type, boys, girls, feature_func):        
-    test_set, train_set = label_names(boys, girls, feature_func)
-    classifier = classifier_type.train(train_set)
-    accuracy = nltk.classify.accuracy(classifier, test_set)
-    fails = test_our_class(classifier, feature_func)
+def test_classifier(classifier_type, boys, girls, func):
+    classifier_dict = {'ConditionalExponential':ConditionalExponential,
+                       'DecisionTree':DecisionTree,
+                       'Maxent':Maxent,
+                       'NaiveBayes':NaiveBayes}
+    
+    classifier, accuracy = classifier_dict[classifier_type](boys, girls, func) 
+    fails = test_our_class(classifier, func)
     return accuracy, fails
 
-            
+
 if __name__ == "__main__":    
     boys, girls = load_us_names()
-    accuracy, fails = test_classifier(nltk.NaiveBayesClassifier, 
-                                      boys, 
+    classifiers = ['DecisionTree', 'Maxent', 'NaiveBayes', 
+                   'ConditionalExponential']
+    classifier_type = 'DecisionTree'
+    feature = ngrams_ends_and_vowels
+    accuracy, fails = test_classifier(classifier_type, 
+                                      boys,
                                       girls, 
-                                      ends_and_vowels)
+                                      feature)
     print "US accuracy: {}\n".format(accuracy)
     for name in fails:
         print "{} was misclassified.".format(name)
     print ""
     
     boys, girls = load_international_names()
-    accuracy, fails = test_classifier(nltk.NaiveBayesClassifier, 
+    accuracy, fails = test_classifier(classifier_type, 
                                       boys, 
                                       girls, 
-                                      ends_and_vowels)
+                                      feature)
     print "International accuracy: {}\n".format(accuracy)
     for name in fails:
         print "{} was misclassified.".format(name)

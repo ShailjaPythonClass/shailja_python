@@ -9,8 +9,7 @@ import unicodecsv
 import pandas as pd
 
 import features
-from improve_nlpk import label_names
-from international_names import load_international_names
+from load_names import load_international_names
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
@@ -72,13 +71,13 @@ def contains_ends_and_vowels(name, ngrams):
 if __name__ == "__main__":
     func = all_ngrams()
     boys, girls = load_international_names()
-    test_set, train_set = label_names(boys, girls, func)
-    
-    classifier = RandomForestClassifier(n_estimators=100)
-    train_df, train_labels = features_to_df(train_set)
-    
-    classifier.fit(train_df.as_matrix(), train_labels)
-    test_df, test_labels = features_to_df(test_set)
-    accuracy = classifier.score(test_df, test_labels)
-    print accuracy
-
+#    test_set, train_set = label_names(boys, girls, func)
+#    
+#    classifier = RandomForestClassifier(n_estimators=100)
+#    train_df, train_labels = features_to_df(train_set)
+#    
+#    classifier.fit(train_df.as_matrix(), train_labels)
+#    test_df, test_labels = features_to_df(test_set)
+#    accuracy = classifier.score(test_df, test_labels)
+#    print accuracy
+#
