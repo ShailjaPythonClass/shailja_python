@@ -1,0 +1,11 @@
+backports-abc==0.5
+backports.shutil-get-terminal-size==1.0.0
+backports.ssl-match-hostname==3.4.0.2
+et-xmlfile==1.0.1
+ipython-genutils==0.2.0
+jupyter-client==5.0.1
+jupyter-core==4.3.0
+palettable==3.0.0
+prompt-toolkit==1.0.14
+tables==3.3.0
+win-unicode-console==0.5
