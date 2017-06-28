@@ -1,0 +1,32 @@
+My 2 minute summary of virtual environments:
+
+=====================================
+Install the environment:
+conda env create -f environment.yml
+activate python-class
+pip install -r requirements.txt
+
+=====================================
+To delete the environment:
+
+conda remove --name python-class --all
+
+=====================================
+Share the environment:
+Exporting the environment is a little tricky because Wayfair's wonky permissions don't work with the automated process.
+
+Step 1, the automated process:
+activate python-class
+conda env export > environment.yml
+
+Now, edit environment.yml
+Delete the line starting with prefix: 
+Delete the line starting with pip: 
+Cut everything below the pip: line to the end of the file and save.
+
+
+Open a new file in notepad
+Paste the pip section you just cut
+Delete the - that starts every line
+Save this as requirements.txt (make sure it's in the same directory as environment.yml)
+
