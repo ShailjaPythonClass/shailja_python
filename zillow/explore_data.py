@@ -148,5 +148,5 @@ if __name__ == "__main__":
     model.summary()
     
     # Now talk about 
-    reg_model = linear_fitter.fit_regularized(alpha=1e-4, l1_wt=0.15)
+    reg_model = linear_fitter.fit_regularized(alpha=1e-4, L1_wt=0.15)
     reg_model.summary()
