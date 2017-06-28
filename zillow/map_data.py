@@ -44,8 +44,8 @@ def choropleth(shp, bbox, data, title=None):
 if __name__ == "__main__":
     merged = get_clean_merged_df()
 
-    shapefile = "./shapefiles/cb_2015_us_zcta510_500k.shp"
-    database_file = "./shapefiles/cb_2015_us_zcta510_500k.dbf"
+    shapefile = "./shapefiles/zillow.shp"
+    database_file = "./shapefiles/zillow.dbf"
     shp = pysal.open(shapefile)
     dbf = pysal.open(database_file)
 
@@ -53,7 +53,7 @@ if __name__ == "__main__":
         tree = KDTree(np.array([p.centroid for p in pgon_list]))
         retval = []
         bar = progressbar.ProgressBar(max_value=len(lats))
-        for lat, lon in bar(zip(lats, lons)):
+        for lat, lon in bar(zip(lats, lons)):            
             retval.append(tree.query((lon,lat))[1])
         return retval
 
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
         yval = [0 for _ in shp]
         for i, row in errors.iterrows():
-            yval[row.pgons] = x[i]
+            yval[int(row.pgons)] = row[col]
 
         bbox = [merged.longitude.min(), merged.latitude.min(),
                merged.longitude.max(), merged.latitude.max()]
