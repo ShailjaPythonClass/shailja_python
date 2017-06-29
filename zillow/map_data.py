@@ -26,7 +26,7 @@ def choropleth(shp, bbox, data, title=None):
     else:
         cmap = 'viridis'
     shapes = maps.map_poly_shp(shp)
-    zips = maps.base_choropleth_unique(shapes,
+    zips = maps.base_choropleth_classless(shapes,
                                        values=normed,
                                        cmap=cmap)
     zips.set_linewidth(0.75)
@@ -42,7 +42,7 @@ def choropleth(shp, bbox, data, title=None):
     plt.show()
 
 if __name__ == "__main__":
-    merged = get_clean_merged_df()
+    merged = get_clean_merged_df(False)
 
     shapefile = "./shapefiles/zillow.shp"
     database_file = "./shapefiles/zillow.dbf"

@@ -7,5 +7,7 @@ jupyter-client==5.0.1
 jupyter-core==4.3.0
 palettable==3.0.0
 prompt-toolkit==1.0.14
-tables==3.3.0
+pygdaltools==1.1
+tables==3.2.2
 win-unicode-console==0.5
+
