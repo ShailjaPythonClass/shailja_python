@@ -1,0 +1,12 @@
+Damage Formula
+https://www.math.miami.edu/~jam/azure/compendium/battdam.htm
+
+To calculate statistics as a function of level
+https://bulbapedia.bulbagarden.net/wiki/Statistic
+
+To find move power
+https://pokeapi.co/docsv2/
+https://bulbapedia.bulbagarden.net/wiki/List_of_moves
+
+Opponents:
+https://bulbapedia.bulbagarden.net/wiki/Elite_Four
