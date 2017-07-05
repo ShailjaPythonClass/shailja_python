@@ -7,6 +7,14 @@ activate python-class
 pip install -r requirements.txt
 
 =====================================
+Update the environment (every week):
+<in the python-class directory>
+conda env update -f environment.yml
+conda activate python-class
+pip install -r requirements.txt
+
+
+=====================================
 To delete the environment:
 
 conda remove --name python-class --all

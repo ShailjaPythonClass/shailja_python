@@ -15,6 +15,7 @@ dependencies:
 - chardet=3.0.4=py27_0
 - colorama=0.3.9=py27_0
 - configparser=3.5.0=py27_0
+- curl=7.52.1=vc9_0
 - cycler=0.10.0=py27_0
 - decorator=4.0.11=py27_0
 - docutils=0.13.1=py27_0
@@ -23,8 +24,11 @@ dependencies:
 - et_xmlfile=1.0.1=py27_0
 - functools32=3.2.3.2=py27_0
 - futures=3.1.1=py27_0
+- gdal=2.1.0=py27_0
+- geos=3.5.0=vc9_0
 - get_terminal_size=1.0.0=py27_0
-- hdf5=1.8.17=vc9_0
+- hdf4=4.2.12=vc9_1
+- hdf5=1.8.15.1=vc9_4
 - html5lib=0.999=py27_0
 - icu=57.1=vc9_0
 - imagesize=0.7.1=py27_0
@@ -39,8 +43,12 @@ dependencies:
 - jsonschema=2.6.0=py27_0
 - jupyter_client=5.0.1=py27_0
 - jupyter_core=4.3.0=py27_0
+- kealib=1.4.6=vc9_0
 - lazy-object-proxy=1.3.1=py27_0
+- libgdal=2.1.0=vc9_0
+- libnetcdf=4.3.3.1=vc9_4
 - libpng=1.6.27=vc9_0
+- libtiff=4.0.6=vc9_3
 - markupsafe=0.23=py27_2
 - matplotlib=2.0.2=np111py27_0
 - mistune=0.7.4=py27_0
@@ -63,6 +71,7 @@ dependencies:
 - pickleshare=0.7.4=py27_0
 - pip=9.0.1=py27_1
 - progressbar2=3.18.1=py27_0
+- proj4=4.9.2=vc9_0
 - prompt_toolkit=1.0.14=py27_0
 - psutil=5.2.2=py27_0
 - py=1.4.34=py27_0
@@ -73,7 +82,7 @@ dependencies:
 - pyparsing=2.1.4=py27_0
 - pyqt=5.6.0=py27_2
 - pysal=1.13.0=py27_0
-- pytables=3.3.0=np111py27_0
+- pytables=3.2.2=np111py27_4
 - pytest=3.1.2=py27_0
 - pytest-runner=2.11.1=py27_0
 - python=2.7.13=0
@@ -116,4 +125,5 @@ dependencies:
 - wheel=0.29.0=py27_0
 - win_unicode_console=0.5=py27_0
 - wrapt=1.10.10=py27_0
+- xerces-c=3.1.4=vc9_0
 - zlib=1.2.8=vc9_3

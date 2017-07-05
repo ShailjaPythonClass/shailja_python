@@ -17,7 +17,7 @@ from pysal.contrib.viz import mapping as maps
 
 from clean_data import get_clean_merged_df
 
-def choropleth(pgons, bbox, data, title=None):
+def choropleth(shp, bbox, data, title=None):
     data = 1.0 * np.nan_to_num(np.array(data))
     normed = (data - data.min()) / data.ptp()
 
@@ -25,7 +25,8 @@ def choropleth(pgons, bbox, data, title=None):
         cmap = 'PRGn'
     else:
         cmap = 'viridis'
-    zips = maps.base_choropleth_unique(maps.map_poly_shp(pgons),
+    shapes = maps.map_poly_shp(shp)
+    zips = maps.base_choropleth_classless(shapes,
                                        values=normed,
                                        cmap=cmap)
     zips.set_linewidth(0.75)
@@ -41,10 +42,10 @@ def choropleth(pgons, bbox, data, title=None):
     plt.show()
 
 if __name__ == "__main__":
-    merged = get_clean_merged_df()
+    merged = get_clean_merged_df(False)
 
-    shapefile = "./shapefiles/cb_2015_us_zcta510_500k.shp"
-    database_file = "./shapefiles/cb_2015_us_zcta510_500k.dbf"
+    shapefile = "./shapefiles/zillow.shp"
+    database_file = "./shapefiles/zillow.dbf"
     shp = pysal.open(shapefile)
     dbf = pysal.open(database_file)
 
@@ -52,7 +53,7 @@ if __name__ == "__main__":
         tree = KDTree(np.array([p.centroid for p in pgon_list]))
         retval = []
         bar = progressbar.ProgressBar(max_value=len(lats))
-        for lat, lon in bar(zip(lats, lons)):
+        for lat, lon in bar(zip(lats, lons)):            
             retval.append(tree.query((lon,lat))[1])
         return retval
 
@@ -61,7 +62,7 @@ if __name__ == "__main__":
     zips = [zip_list[i] for i in inds]
 
     merged['pgons'] = inds
-    merged['zips'] = zips
+    merged['zips'] = map(int, zips)
 
     def error_stats(group):
         return pd.Series({'mean_error': group.logerror.mean(),
@@ -69,13 +70,13 @@ if __name__ == "__main__":
                           'abs_error': np.mean(np.abs(group.logerror))})
     errors = merged.groupby(['pgons', 'zips']).apply(error_stats)
     errors.reset_index(inplace=True)
-
+    
     for col in ['mean_error', 'std_error', 'abs_error']:
         x = errors[col]
 
         yval = [0 for _ in shp]
         for i, row in errors.iterrows():
-            yval[row.pgons] = x[i]
+            yval[int(row.pgons)] = row[col]
 
         bbox = [merged.longitude.min(), merged.latitude.min(),
                merged.longitude.max(), merged.latitude.max()]
