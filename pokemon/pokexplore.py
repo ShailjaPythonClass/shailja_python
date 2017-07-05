@@ -20,8 +20,7 @@ if __name__ == "__main__":
     counts = pokestats.groupby(['Color', 'Type_1']).count()['Number']
     counts = counts.reset_index()
     cols = {'Color':'color', 'Type_1':'type', 'Number':'count'}
-    counts.rename(columns=cols, inplace=True)
-    counts.sort_values()
+    counts.rename(columns=cols, inplace=True)    
     counts.sort_values(by='count', ascending=False, inplace=True)
         
     url = 'http://pokeapi.co/api/v2/pokemon/'
@@ -33,7 +32,8 @@ if __name__ == "__main__":
         
     move_url = 'http://pokeapi.co/api/v2/move/'
     move = requests.get(move_url + '1').json()    
-    print move['name'], move['power'], move['accuracy'], move['priority'],
+    print move['name'], move['power'], 
+    print move['accuracy'], move['priority'],
     print move['type']['name'], move['damage_class']['name']
     
     type_df = pd.read_csv('./data/poke-type.csv')
