@@ -5,6 +5,7 @@ Created on Wed Jul 05 09:37:23 2017
 @author: jzuber
 """
 import requests
+import math
 
 import numpy as np
 import pandas as pd
@@ -38,3 +39,17 @@ if __name__ == "__main__":
     
     type_df = pd.read_csv('./data/poke-type.csv')
     
+    ev = 16
+
+# pokemon hp and other stats def
+def hp(base, level, iv, ev=16):
+    iv = min(level, 63)
+    a = math.floor((((2 * base + iv + math.floor(ev/4)) * level)/100))
+    return a + level + 10
+
+def otherstat(base, level, iv = None, ev=16):
+    if iv is None:
+        iv = min(63, level)
+    a = math.floor((((2 * base + iv + math.floor(ev/4)) * level)/100))
+    return a + 5
+
