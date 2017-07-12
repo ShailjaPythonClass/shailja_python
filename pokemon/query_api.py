@@ -10,11 +10,17 @@ import pandas as pd
 import numpy as np
 
 def pull_all_versions():
-    version_dict = {}
-    for version in np.arange(16)+1:
-        url = 'http://pokeapi.co/api/v2/version-group/{}'.format(version)
-        res = requests.get(url).json()
-        version_dict.update({res['name']: version})
+    try:
+        version_dict = dict(pd.read_csv('./data/versions.csv').values)
+    except:
+        version_dict = {}
+        for version in np.arange(16)+1:
+            url = 'http://pokeapi.co/api/v2/version-group/{}'.format(version)
+            res = requests.get(url).json()
+            version_dict.update({res['name']: version})
+        version_df = pd.DataFrame(version_dict.items(),
+                                  columns=['name','version'])
+        version_df.to_csv('./data/versions.csv', index=False)
 
     return version_dict
 
@@ -45,8 +51,9 @@ def get_pokemon_abilities(pokemons=['all'], game_version=16):
     else:
         df = pd.read_csv('./data/pokemon_alopez247.csv')
         for name in df.Name.values:
-            url = 'http://pokeapi.co/api/v2/pokemon/{}'.format(name)
+            url = 'http://pokeapi.co/api/v2/pokemon/{}'.format(name.lower())
             res = requests.get(url).json()
+            print res
             pokemon_moves.extend(extract_moves(res['name'],
                                                res['moves'],
                                                game_version,
@@ -55,14 +62,28 @@ def get_pokemon_abilities(pokemons=['all'], game_version=16):
 
 def pull_all_moves():
     moves = []
-    keys = ['name', 'power', 'accuracy', 'pp', 'target', 'type', 'damage_class',
-            'priority', 's']
+    keys = ['name', 'power', 'accuracy', 'pp', 'target', 'type',
+            'damage_class', 'priority']
     
     for move in np.arange(719)+1:
         url = 'http://pokeapi.co/api/v2/move/{}'.format(move)
         res = requests.get(url).json()
+        moves.append([res[key] for key in keys])
+    return moves
+
 
 if __name__ == '__main__':
     #res = requests.get('http://pokeapi.co/api/v2/pokemon/ivysaur').json()
-    pokemons = ['ivysaur', 'bulbasaur']
-    abilities = get_pokemon_abilities(pokemons)
+    abilities = get_pokemon_abilities()
+    moves = pull_all_moves(1)
+    
+    pokemon_moves = []
+    df = pd.read_csv('./data/pokemon_alopez247.csv')
+    for idx, name in enumerate(df.Name.values):
+        url = 'http://pokeapi.co/api/v2/pokemon/{}'.format(name.lower())
+        res = requests.get(url).json()
+        print idx, name, res.keys()[1]
+        pokemon_moves.extend(extract_moves(res['name'],
+                                           res['moves'],
+                                           16,
+                                           versions))
