@@ -31,7 +31,7 @@ def type_multiplier(attack_type, target_pokemon):
     attack_type = attack_type.title()
     target_pokemon = target_pokemon.title()
     pk_stats = pokestats[pokestats.Name == target_pokemon].squeeze()
-    multiplier = 1
+    multiplier = 10
     types = [pk_stats['Type_1'], pk_stats['Type_2']]    
     for target_type in types:
         if target_type is not np.nan:        
@@ -39,14 +39,14 @@ def type_multiplier(attack_type, target_pokemon):
     return multiplier
 
 if __name__ == "__main__":
-    assert type_multiplier("Fire", "Bulbasaur") == 2, "Test1"
+    assert type_multiplier("Fire", "Bulbasaur") == 20, "Test1"
     
-    assert type_multiplier("fIRe", "buLBAsaur") == 2, "CaseTest"
+    assert type_multiplier("fIRe", "buLBAsaur") == 20, "CaseTest"
     
-    assert type_multiplier("rOCK", "butterFREE") == 4, "CaseTest2"
+    assert type_multiplier("rOCK", "butterFREE") == 40, "CaseTest2"
     
-    assert type_multiplier("grASS", "metapod") == 0.5, "HalfTest"
+    assert type_multiplier("grASS", "metapod") == 5, "HalfTest"
     
     assert type_multiplier("ghost", "pidgey") == 0.0, "HalfTest2"
     
-    assert type_multiplier("fairy", "charmander") == 0.5, "OneType"
+    assert type_multiplier("fairy", "charmander") == 5, "OneType"

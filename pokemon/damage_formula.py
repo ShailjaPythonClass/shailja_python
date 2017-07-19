@@ -16,68 +16,59 @@ Y = Type modifiers (40, 20, 10, 5, 2.5, or 0)
 Z = a random number between 217 and 255
 
 """
-
 from collections import namedtuple
 from random import randint
-
-pokemon = namedtuple('pokemon', ['attack', 'special_attack', 'defense',
-                                'special_defense', 'level', 
-                                'type_1', 'type_2'])
-
-#charmander = pokemon(10,11,5,13, 40,'Fire', None)  #attacker
-#Squirtle = pokemon(12,9,6,12,39,'Water', None) #defender
-
-#Deleted target_pokemon
+import type_multiplier 
 
 
-def damage_done(attack_type, 
+def damage_done(attack_type, multiplier, attack_power, 
                 attacker, defender):
-
+   
+    
     def critical_hit():
         return 1  # This is not finished yet...    
-    
-    def b_attack_function(attack_type):
-        if attack_type == "Attack": # physical attack
-           return attacker.attack
-        elif attack_type == "Special": # special attack
-           return attacker.special_attack
-        else:
-           return "Error: wrong attack type; enter either 'Attack' or 'Special'!"
-    
-    def c_attack_power():
-        return 60      # This is not finished yet...
-        
-    def d_defense_function(attack_type):
-        if attack_type == "Attack": # physical attack
-           return defender.defense
-        elif attack_type == "Special": # special attack
-           return defender.special_defense
-        else:
-           return "Error: wrong attack type; enter either Attack or Special!"
            
-    def x_STAB(): #same-type attack bonus (1 or 1.5)
-        return 1 #This is not finished yet...
-        
-    def y_type_modifiers(): # Type modifiers (40,20,10,5,2.5, or 0)
-        return 10 # Not finished yet...
-
+    #same-type attack bonus (1 or 1.5)
+    def stab():       
+        if attack_type == attacker.type_1 or attack_type == attacker.type_2:
+            stab = 1.5
+        else:
+            stab = 1
+        return stab
     
     a_attacker_level = attacker.level #attacker's Level 
-       
+    b_attack = attacker.attack(attack_type)
+    c_attack_power = attack_power
+    d_defense = defender.defense(attack_type)
+        
     z = randint(217,255) # a random number between 217 and 255
     
     damage = 0 
     damage += (2*a_attacker_level)/5+2
-    damage *= b_attack_function(attack_type)*c_attack_power()  
-    damage /= d_defense_function(attack_type)
+    damage *= b_attack*c_attack_power()  
+    damage /= d_defense
     damage = damage/50+2
-    damage *= x_STAB()*y_type_modifiers()/10
+    damage *= stab()*multiplier/10
     damage *= z/255
                
     return damage
 
 
 
+if __name__ == '__main__':
+    
+    attack
+    
+    damage_done(attack_type, multiplier, attack_power, 
+                attacker, defender)
+    
+"""
+ damage_done("Attack", "Pikachu", "Bulbasaur")
+
+"""    
+    
+    
+    
 
 
 
