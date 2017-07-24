@@ -18,13 +18,13 @@ class Pokemon:
         self.type_1 = type_1
         self.type_2 = type_2
              
-    def attack(self, attack_type):
+    def typed_attack(self, attack_type):
         if attack_type == "Physical":
             return self.attack
         else:
             return self.special_attack
         
-    def defense(self, attack_type):
+    def typed_defense(self, attack_type):
         if attack_type == "Physical":
             return self.defense
         else:
