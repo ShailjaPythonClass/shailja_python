@@ -11,13 +11,14 @@ import numpy as np
 
 
 def get_pokemon_moves(pokemon, level):
-    
+
     ability_df, moves = make_datasets()
-    pokemon = ability_df[ability_df.pokemon == pokemon]
+    pokemon = ability_df[ability_df.pokemon == pokemon.lower()]
     pokemon = pokemon.merge(moves, left_on='move', right_on='name')
     pokemon = pokemon[pokemon.level <= level]
+    pokemon.drop(['name', 'pokemon'], axis=1, inplace=True)
 
-    return pokemon
+    return pokemon.to_dict(orient='record')
 
 
 def make_datasets(game_version=16):
