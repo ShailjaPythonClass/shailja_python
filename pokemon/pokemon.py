@@ -7,6 +7,7 @@ Created on Wed Jul 12 14:26:52 2017
 from query_api import get_pokemon_moves
 
 
+<<<<<<< HEAD
 def _stat_formula(base, level, is_hp=False, ev=None):
     if not ev:
         ev = min(73, level)             
@@ -16,11 +17,14 @@ def _stat_formula(base, level, is_hp=False, ev=None):
     else:
         return retval + 5
             
+=======
+>>>>>>> 22d003d1f60b5e8058ca1af7651537950fd59d5c
 class Pokemon:
                
     def __init__(self, name, level, current_hp=None):
         self.name = name
         self.level = level
+<<<<<<< HEAD
         base_stats = func_call_that_akshay_has_to_write(name)
         self.max_hp = _stat_formula(base_stats.hp, is_hp=True)
         self.current_hp = self.max_hp
@@ -36,16 +40,23 @@ class Pokemon:
         
         
     def attack(self, attack_type):
+=======
+        self.type_1 = type_1
+        self.type_2 = type_2
+             
+    def typed_attack(self, attack_type):
+>>>>>>> 22d003d1f60b5e8058ca1af7651537950fd59d5c
         if attack_type == "Physical":
             return self.attack
         else:
             return self.special_attack
         
-    def defense(self, attack_type):
+    def typed_defense(self, attack_type):
         if attack_type == "Physical":
             return self.defense
         else:
             return self.special_defense
+<<<<<<< HEAD
             
     def choose_moves(self, move_list):
         pass
@@ -62,3 +73,14 @@ class Pokemon:
     #
     #test_dict.values()
     #Out[6]: dict_values([3, 2, 1])
+=======
+
+
+"""        
+pikachu = Pokemon(10,20, 30,30,40,"Electric",None)
+pikachu.attack 
+
+""" 
+
+
+>>>>>>> 22d003d1f60b5e8058ca1af7651537950fd59d5c

@@ -128,4 +128,4 @@ if __name__ == '__main__':
     moves = []
     moves.extend(pull_all_moves(range(622)))
     movedf = create_moves_df(moves)
-    
+
