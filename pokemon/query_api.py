@@ -57,8 +57,9 @@ def pull_all_versions():
             url = 'http://pokeapi.co/api/v2/version-group/{}'.format(version)
             res = requests.get(url).json()
             version_dict.update({res['name']: version})
-        version_df = pd.DataFrame(version_dict.items(),
-                                  columns=['name', 'version'])
+        version_df = pd.DataFrame.from_dict(version_dict, orient = 'index')
+        version_df.reset_index(inplace=True)
+        version_df.columns = ['name', 'version']
         version_df.to_csv('./data/versions.csv', index=False)
 
     return version_dict
