@@ -24,7 +24,7 @@ from random import randint, seed
 
 from pokemon import Pokemon
 
-def dave_call():
+def dave_call(move, defender):
     return 1
 
 def damage_done(move, attacker, defender, random_seed=None):
@@ -32,11 +32,11 @@ def damage_done(move, attacker, defender, random_seed=None):
     if random_seed:
         seed(random_seed)
         
-    attack_type = move.attack_type
-    attack_power = move.power
-    accuracy = move.accuracy
+    attack_type = move.type.values
+    attack_power = move.power.values
+    accuracy = move.accuracy.values
     multiplier = dave_call(move, defender)
-    
+
     #same-type attack bonus (1 or 1.5)
     def stab():                   
         if attack_type == attacker.type_1 or attack_type == attacker.type_2:
@@ -70,8 +70,8 @@ def damage_done(move, attacker, defender, random_seed=None):
     damage *= stab() * multiplier / float(10)
     damage *= z
     damage *= does_attack_hit()
-           
-    return int(damage)
+
+    return damage
 
 
 if __name__ == '__main__':

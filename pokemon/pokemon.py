@@ -4,6 +4,7 @@ Created on Wed Jul 12 14:26:52 2017
 
 @author: shezhang
 """
+import pandas as pd
 from collections import namedtuple
 from query_api import get_pokemon_moves
 
@@ -40,11 +41,12 @@ class Pokemon:
         self.special_attack = _stat_formula(row['Sp_Atk'], level)
         self.defense = _stat_formula(row['Defense'], level)
         self.special_defense = _stat_formula(row['Sp_Def'], level)
-        self.type_1 = _stat_formula(row['Type_1'], level)
-        self.type_2 = _stat_formula(row['Type_2'], level)
+        self.type_1 = row['Type_1']
+        self.type_2 = row['Type_2']
         self.movelist = self.choose_moves(get_pokemon_moves(self.name, 
                                                             self.level))
-        
+        self.speed = row['Speed']
+        self.best_move = None
 
     def typed_attack(self, attack_type):
 
@@ -76,15 +78,16 @@ class Pokemon:
                             some_list[i]['accuracy']*some_list[i]['power']))
             
         ranks = sorted(ranks, key = lambda x: int(x[1]))
+
         move_set=[]
-        for j in range(4):
-            move_set.append(ranks[j*-1][0])
+        for j in range(min(4, len(ranks))):
+            move_set.append(ranks[j-1][0])
         
         return move_set
 
-if __name__ = "__main__":        
+if __name__ == "__main__":        
     pikachu = Pokemon("Pikachu", 15)
-    pikachu = Pokemon("piKAChU", 13.2)
+    pikachu = Pokemon("piKAChU", 40)
 
 
 

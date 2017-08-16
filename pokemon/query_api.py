@@ -118,6 +118,18 @@ def create_moves_df(moves):
     return movedf
 
 
+def get_move_stats(move):
+    try:
+        move_df = pd.read_csv('./data/moves.csv')
+    except:
+        moves = []
+        moves.extend(pull_all_moves(range(622)))
+        move_df = create_moves_df(moves)
+        move_df.to_csv('./data/moves.csv', index=False)
+
+    return move_df[move_df.name == move]
+
+
 
 if __name__ == '__main__':
 
