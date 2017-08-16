@@ -57,8 +57,9 @@ def pull_all_versions():
             url = 'http://pokeapi.co/api/v2/version-group/{}'.format(version)
             res = requests.get(url).json()
             version_dict.update({res['name']: version})
-        version_df = pd.DataFrame(version_dict.items(),
-                                  columns=['name', 'version'])
+        version_df = pd.DataFrame.from_dict(version_dict, orient = 'index')
+        version_df.reset_index(inplace=True)
+        version_df.columns = ['name', 'version']
         version_df.to_csv('./data/versions.csv', index=False)
 
     return version_dict
@@ -117,6 +118,18 @@ def create_moves_df(moves):
     return movedf
 
 
+def get_move_stats(move):
+    try:
+        move_df = pd.read_csv('./data/moves.csv')
+    except:
+        moves = []
+        moves.extend(pull_all_moves(range(622)))
+        move_df = create_moves_df(moves)
+        move_df.to_csv('./data/moves.csv', index=False)
+
+    return move_df[move_df.name == move]
+
+
 
 if __name__ == '__main__':
 
@@ -128,4 +141,4 @@ if __name__ == '__main__':
     moves = []
     moves.extend(pull_all_moves(range(622)))
     movedf = create_moves_df(moves)
-    
+
