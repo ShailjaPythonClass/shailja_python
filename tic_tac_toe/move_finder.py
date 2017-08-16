@@ -31,6 +31,26 @@ def pick_winning_move(board, my_char):
                     return my_char, i, j
     return False
 
+
+def pick_two_moves(board, my_char):
+    opponent = {'o': 'x', 'x': 'o'}
+    winner = winner_check(board)
+    if winner is not False:
+        return "{} already won".format(winner)    
+
+    for i in range(3):
+        for j in range(3): 
+            if board[i][j] == ' ':
+                test_board = deep_copy(board)
+                test_board[i][j] = my_char
+                if winner_check(test_board) == my_char:
+                    return my_char, i, j
+                op_wins = pick_winning_move(test_board, opponent(my_char))
+                if op_wins:
+                    continue
+    return False
+
+
 if __name__ == "__main__":
     x_wins = [['x', 'x', 'x'],             
               [' ', ' ', ' '],
