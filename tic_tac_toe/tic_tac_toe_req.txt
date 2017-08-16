@@ -1,0 +1,9 @@
+httplib2==0.9.2
+ipython-genutils==0.2.0
+jupyter-client==5.1.0
+jupyter-core==4.3.0
+oauth2==1.9.0.post1
+prompt-toolkit==1.0.14
+rope-py3k==0.9.4.post1
+twipy==0.0.10
+win-unicode-console==0.5
